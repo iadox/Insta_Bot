@@ -4,8 +4,12 @@ from email.mime.text import MIMEText
 from email import utils
 import time
 
+bot_user = "idk"
+trakced_acc = "idk either"
+email_of_receiver = "b@gmail.com"
+sender = 'insta_activity_bot@outlook.com'
+sender_password = "capybaras"
 def send_email(peep, change):
-    sender = 'insta_activity_bot@outlook.com'
     body = f'''Subject: {change} by {peep}\n \n\nYooooo,\n\n{peep} just {change} you 
     \nlmao, \nThe Instagram Bot'''
     try:
@@ -16,21 +20,21 @@ def send_email(peep, change):
     type(smtpObj)
     smtpObj.ehlo()
     smtpObj.starttls()
-    smtpObj.login(sender, "insta1234") 
-    smtpObj.sendmail(sender, "odairaed@hotmail.com", body) 
+    smtpObj.login(sender, sender_password) 
+    smtpObj.sendmail(sender, email_of_receiver, body) 
     smtpObj.quit()
 
 bot = Bot()
-beeb = bot.login(username="imagine_wagons_official", password="3434abab")
+beeb = bot.login(username=bot_user, password="your_password")
 
-my_followers = sorted(list(bot.get_user_followers(user_id="imagine_wagons_official")))
+my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
 state = True
 while state:
     compare_list1 = []
     compare_list2 = []
-    my_followers = sorted(list(bot.get_user_followers(user_id="imagine_wagons_official")))
+    my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
     time.sleep(10)
-    current_followers = sorted(list(bot.get_user_followers(user_id="imagine_wagons_official")))
+    current_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
     if current_followers != my_followers:
         print(my_followers)
         print(current_followers)
