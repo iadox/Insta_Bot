@@ -1,67 +1,106 @@
 from instabot import Bot
-import smtplib
-from email.mime.text import MIMEText
-from email import utils
 import time
+import customtkinter as ct
 
-bot_user = "idk"
-trakced_acc = "idk either"
-email_of_receiver = "b@gmail.com"
-sender = 'insta_activity_bot@outlook.com'
-sender_password = "capybaras"
-def send_email(peep, change):
-    body = f'''Subject: {change} by {peep}\n \n\nYooooo,\n\n{peep} just {change} you 
-    \nlmao, \nThe Instagram Bot'''
-    try:
-        smtpObj = smtplib.SMTP('smtp-mail.outlook.com', 587)
-    except Exception as e:
-        print(e)
-        smtpObj = smtplib.SMTP_SSL('smtp-mail.outlook.com', 465)
-    type(smtpObj)
-    smtpObj.ehlo()
-    smtpObj.starttls()
-    smtpObj.login(sender, sender_password) 
-    smtpObj.sendmail(sender, email_of_receiver, body) 
-    smtpObj.quit()
+def entry_screen():
+    for widgets in content.winfo_children():
+      widgets.destroy()
+    root.geometry("320x100")
+    label_1 = ct.CTkLabel(master=content,text = "Instagram Username: ")
+    label_1.grid(row = 0, column = 0, pady = 10, padx = 10)
+    insta_entry = ct.CTkEntry(master=content)
+    insta_entry.grid(row = 0, column = 1, pady = 10, padx = 10)
+    submit = ct.CTkButton(master = content, text = "Continue",command= lambda:activity_screen(insta_entry.get()))
+    submit.grid(row = 1, column = 1, pady = 10, padx = 10)
+
+
+def activity_screen(insta_acc):
+    print(insta_acc)
+    for widgets in content.winfo_children():
+      widgets.destroy()
+    root.geometry("350x160")
+    content.configure(height = 120, width = 340)
+    label_2 = ct.CTkLabel(master=content,text = f"Hey {insta_acc}!, \nCheck your DMs. messages might be in the DM requests. \nAsk someone to unfollow you to test if it's working ")
+    label_2.place(x = 10, y = 10)
+    stop_tracking = ct.CTkButton(master = content, text = "stop tracking", command=lambda:entry_screen())
+    stop_tracking.place(x = 10, y = 70)
+    #start_tracking = ct.CTkButton(master = content, text = "start tracking", command=lambda:activity(insta_acc))
+    #start_tracking.place(x = 190, y = 70)
+    time.sleep(5)
+    bot_user = "lordfarquaad.bot"
+    insta_pass_bot = "easytoguesspassword"
+    trakced_acc = insta_acc
+    beeb = bot.login(username=bot_user, password=insta_pass_bot)
+    my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
+    state = True
+    while state:
+        my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
+        time.sleep(10)
+        current_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
+
+        if my_followers != current_followers:
+            set1 = set(my_followers)
+            set2 = set(current_followers)
+            unfollowed = list(sorted(set1 - set2))
+            try:
+                print("reached Unfollowed")
+                print(f"unfollowed list: {unfollowed}")
+                unfollowed = unfollowed[0]
+                bot.send_message(text= f"@{bot.get_username_from_user_id(unfollowed)} just unfollowed you", user_ids=trakced_acc)
+            except:
+                print("reached exception")
+                pass
+            print('missing:', unfollowed)
+        else:
+            print("nothing so far")
+        
+    bot.logout()
+
+
+def activity(insta_acc):
+    bot_user = "username"
+    insta_pass_bot = "password"
+    trakced_acc = insta_acc
+    beeb = bot.login(username=bot_user, password=insta_pass_bot)
+    my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
+    state = True
+    while state:
+        my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
+        time.sleep(10)
+        current_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
+
+        if my_followers != current_followers:
+            set1 = set(my_followers)
+            set2 = set(current_followers)
+            unfollowed = list(sorted(set1 - set2))
+            try:
+                print("reached Unfollowed")
+                print(f"unfollowed list: {unfollowed}")
+                unfollowed = unfollowed[0]
+                bot.send_message(text= f"@{bot.get_username_from_user_id(unfollowed)} just unfollowed you", user_ids=trakced_acc)
+            except:
+                print("reached exception")
+                pass
+            print('missing:', unfollowed)
+        else:
+            print("nothing so far")
+        
+    bot.logout()
+
 
 bot = Bot()
-beeb = bot.login(username=bot_user, password="your_password")
 
-my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
-state = True
-while state:
-    compare_list1 = []
-    compare_list2 = []
-    my_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
-    time.sleep(10)
-    current_followers = sorted(list(bot.get_user_followers(user_id=trakced_acc)))
-    if current_followers != my_followers:
-        print(my_followers)
-        print(current_followers)
-        for fo in my_followers:
-            compare_list1.append(fo)
-        print("----------------------------------------")
-        for fo in current_followers:
-            compare_list2.append(fo)
-        set1 = set(compare_list1)
-        set2 = set(compare_list2)
-        unfollowed = list(sorted(set1 - set2))
-        print(unfollowed)
-        new_follower = list(sorted(set2 - set1))
-        print(new_follower)
-        try:
-            print("reached Unfollowed")
-            unfollowed = unfollowed[0]
-            unfollowed = bot.get_username_from_user_id(unfollowed)
-            send_email(unfollowed, "Unfollowed")
-        except:
-            print("reached new follower")
-            new_follower = new_follower[0]
-            new_follower = bot.get_username_from_user_id(new_follower)
-            send_email(new_follower, "Followed")
-        print('missing:', unfollowed)
-        print('added:', new_follower)
-    else:
-        print("nothing so far")
-    
-bot.logout()
+ct.set_appearance_mode("dark")
+ct.set_default_color_theme("dark-blue")
+root = ct.CTk()
+root.resizable(False, False)
+root.title('Instagram Tracking Software')
+content = ct.CTkFrame(master=root)
+content.pack(expand = True, pady=5,padx=5)
+entry_screen()
+root.mainloop()
+
+
+
+
+
