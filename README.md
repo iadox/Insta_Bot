@@ -1,0 +1,1 @@
+insta_bot.py is fully working, ui.py is the same app but with a user interface, it is still in development. currently limited by the 200 api requests per hour that Instagram gives me so I can't debug as quick. also you need to use 'pip install customtkinter' as well as 'pip install instabot'
